@@ -7,6 +7,9 @@ import VaultDetailsPage from "@/app/[locale]/vaults/[id]/page";
 import { DepositTab } from "@/components/DepositTab";
 import { WithdrawTab } from "@/components/WithdrawTab";
 import { ReferralLinkCard } from "@/components/ReferralLinkCard";
+import { NetworkProvider } from "@/contexts/NetworkContext";
+import { VaultProvider } from "@/contexts/VaultContext";
+import { FreighterProvider } from "@/contexts/FreighterContext";
 
 expect.extend(toHaveNoViolations);
 
@@ -33,23 +36,25 @@ jest.mock("@/contexts/CurrencyContext", () => ({
 }));
 
 describe("Accessibility (axe-core)", () => {
+  const renderWithNetwork = (element: React.ReactElement) => render(<NetworkProvider><FreighterProvider><VaultProvider>{element}</VaultProvider></FreighterProvider></NetworkProvider>);
+
   it("settings page has no detectable violations", async () => {
-    const { container } = render(<SettingsPage />);
+    const { container } = renderWithNetwork(<SettingsPage />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("vault details page has no detectable violations", async () => {
-    const { container } = render(<VaultDetailsPage />);
+    const { container } = renderWithNetwork(<VaultDetailsPage />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("deposit form has no detectable violations", async () => {
-    const { container } = render(<DepositTab />);
+    const { container } = renderWithNetwork(<DepositTab />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("withdraw form has no detectable violations", async () => {
-    const { container } = render(<WithdrawTab />);
+    const { container } = renderWithNetwork(<WithdrawTab />);
     expect(await axe(container)).toHaveNoViolations();
   });
 

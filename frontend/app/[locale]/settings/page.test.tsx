@@ -2,6 +2,10 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import SettingsPage from "./page";
+import { NetworkProvider } from "@/contexts/NetworkContext";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
+
+const renderSettings = () => render(<NetworkProvider><CurrencyProvider><SettingsPage /></CurrencyProvider></NetworkProvider>);
 
 describe("SettingsPage accessibility", () => {
   beforeEach(() => {
@@ -23,7 +27,7 @@ describe("SettingsPage accessibility", () => {
   });
 
   it("provides an accessible name for the back navigation link", () => {
-    render(<SettingsPage />);
+    renderSettings();
 
     expect(
       screen.getByRole("link", { name: /back to dashboard/i })
@@ -31,7 +35,7 @@ describe("SettingsPage accessibility", () => {
   });
 
   it("exposes the notification toggle as a keyboard-accessible switch that opts in on click", async () => {
-    render(<SettingsPage />);
+    renderSettings();
 
     const notificationSwitch = screen.getByRole("switch", {
       name: /enable push notifications/i,
@@ -52,7 +56,7 @@ describe("SettingsPage accessibility", () => {
   });
 
   it("marks the selected appearance theme with aria-checked", () => {
-    render(<SettingsPage />);
+    renderSettings();
 
     const systemThemeButton = screen.getByRole("radio", { name: /system/i });
     const lightThemeButton = screen.getByRole("radio", { name: /light/i });
@@ -66,7 +70,7 @@ describe("SettingsPage accessibility", () => {
   });
 
   it("renders settings actions as keyboard-reachable buttons and links", () => {
-    render(<SettingsPage />);
+    renderSettings();
 
     expect(screen.getByRole("button", { name: /general profile/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /security & keys/i })).toBeInTheDocument();

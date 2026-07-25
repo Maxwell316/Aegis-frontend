@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
+    "test:e2e": "playwright test",
     "test:a11y": "jest accessibility.test.tsx",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
@@ -48,6 +49,7 @@
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.2.0",
     "postcss": "^8.4.0",
+    "@playwright/test": "^1.51.1",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.0.0"
   }
