@@ -6,6 +6,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '../../i18n/routing';
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { siteUrl, siteName, siteDescription } from "@/lib/siteConfig";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -13,8 +14,36 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "X-Aegis",
-  description: "Stablecoin Volatility Shield for Weak Currencies",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteName,
+    template: `%s | ${siteName}`,
+  },
+  description: siteDescription,
+  keywords: [
+    "Stellar",
+    "Soroban",
+    "stablecoin",
+    "hedging",
+    "DeFi",
+    "volatility protection",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    siteName,
+    title: siteName,
+    description: siteDescription,
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description: siteDescription,
+  },
 };
 
 export default async function RootLayout({
