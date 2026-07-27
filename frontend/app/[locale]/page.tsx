@@ -188,6 +188,7 @@ export default function Home() {
             <button type="button" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('vaults')}</button>
             <button type="button" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('swap')}</button>
             <Link href="/bridge" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('bridge')}</Link>
+            <Link href="/simulate" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('simulate')}</Link>
             <Link href="/settings" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('settings')}</Link>
           </nav>
           <div className="flex items-center gap-2 sm:gap-4">
