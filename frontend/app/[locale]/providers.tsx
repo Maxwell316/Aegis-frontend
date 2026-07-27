@@ -8,6 +8,7 @@ import { SessionProvider } from "@/contexts/SessionContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { NetworkProvider } from "@/contexts/NetworkContext";
 import { VaultProvider } from "@/contexts/VaultContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -16,7 +17,9 @@ export function Providers({ children }: { children: ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CurrencyProvider>
             <VaultProvider>
-              <SessionProvider>{children}</SessionProvider>
+              <SessionProvider>
+                <NotificationProvider>{children}</NotificationProvider>
+              </SessionProvider>
             </VaultProvider>
           </CurrencyProvider>
           <Toaster richColors closeButton position="bottom-right" />
