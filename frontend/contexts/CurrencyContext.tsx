@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from "react";
+import { fetchUsdToNgnRate, FALLBACK_USD_TO_NGN_RATE } from "@/lib/currency/exchangeRate";
 
-/** Fixed conversion factor: 1 USD = 1 600 NGN (update via env or API as needed). */
-export const USD_TO_NGN_RATE = 1_600;
+/** How often to re-fetch the live rate while the app is open. */
+const POLL_INTERVAL_MS = 5 * 60_000;
 
 type Currency = "USD" | "NGN";
 
@@ -13,13 +14,44 @@ interface CurrencyContextValue {
   /** Format a USD-denominated value into the active currency string. */
   formatAmount: (usdValue: number) => string;
   symbol: string;
+  /** Live USD→NGN rate (1 USD = `rate` NGN), or the fallback if unavailable. */
   rate: number;
+  /** Whether `rate` came from the live API or the offline fallback constant. */
+  rateSource: "api" | "fallback";
+  isLoadingRate: boolean;
 }
 
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrency] = useState<Currency>("USD");
+  const [rate, setRate] = useState<number>(FALLBACK_USD_TO_NGN_RATE);
+  const [rateSource, setRateSource] = useState<"api" | "fallback">("fallback");
+  const [isLoadingRate, setIsLoadingRate] = useState(true);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    const controller = new AbortController();
+
+    const loadRate = async () => {
+      setIsLoadingRate(true);
+      const result = await fetchUsdToNgnRate(controller.signal);
+      if (!mountedRef.current) return;
+      setRate(result.rate);
+      setRateSource(result.source);
+      setIsLoadingRate(false);
+    };
+
+    loadRate();
+    const intervalId = setInterval(loadRate, POLL_INTERVAL_MS);
+
+    return () => {
+      mountedRef.current = false;
+      controller.abort();
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const toggleCurrency = useCallback(
     () => setCurrency((c) => (c === "USD" ? "NGN" : "USD")),
@@ -30,7 +62,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   const formatAmount = useCallback(
     (usdValue: number): string => {
-      const converted = currency === "NGN" ? usdValue * USD_TO_NGN_RATE : usdValue;
+      const converted = currency === "NGN" ? usdValue * rate : usdValue;
       return new Intl.NumberFormat(currency === "NGN" ? "en-NG" : "en-US", {
         style: "currency",
         currency,
@@ -38,12 +70,12 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         minimumFractionDigits: 2,
       }).format(converted);
     },
-    [currency],
+    [currency, rate],
   );
 
   return (
     <CurrencyContext.Provider
-      value={{ currency, toggleCurrency, formatAmount, symbol, rate: USD_TO_NGN_RATE }}
+      value={{ currency, toggleCurrency, formatAmount, symbol, rate, rateSource, isLoadingRate }}
     >
       {children}
     </CurrencyContext.Provider>
