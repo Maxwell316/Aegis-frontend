@@ -25,6 +25,11 @@ const RiskChart = dynamic(() => import('../../components/RiskChart').then(mod =>
   ssr: false,
   loading: () => <div className="min-h-[200px] flex items-center justify-center animate-pulse"><p className="text-muted-foreground">Loading risk data...</p></div>
 });
+
+const PerformanceAttribution = dynamic(() => import('../../components/PerformanceAttribution').then(mod => mod.PerformanceAttribution), {
+  ssr: false,
+  loading: () => <div className="w-full min-h-[300px] bg-card rounded-xl border border-border animate-pulse flex items-center justify-center"><p className="text-muted-foreground">Loading attribution...</p></div>
+});
 import { RiskBadge } from "../../components/RiskBadge";
 import { WithdrawTab } from "../../components/WithdrawTab";
 import { DepositTab } from "../../components/DepositTab";
@@ -318,6 +323,7 @@ export default function Home() {
               {/* Sidebar / Stats */}
               <div className="space-y-6">
                 <AiInsightStream />
+                <PerformanceAttribution />
                 <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-8 rounded-3xl shadow-2xl shadow-primary/20 relative overflow-hidden">
                    <div className="relative z-10">
                       <h2 className="text-2xl font-bold mb-2">Aegis Guard</h2>
