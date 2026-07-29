@@ -16,7 +16,7 @@ export default function middleware(request: any) {
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
-    connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org;
+    connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://api.coingecko.com;
   `;
 
   const contentSecurityPolicyHeaderValue = cspHeader
