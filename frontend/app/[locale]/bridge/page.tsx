@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { CurrencySwitch } from "@/components/CurrencySwitch";
 import { NetworkSwitch } from "@/components/NetworkSwitch";
 import { BridgeForm } from "@/components/BridgeForm";
+import { AssetPriceTracker } from "@/components/AssetPriceTracker";
 import { BridgeTransactionMonitor } from "@/components/bridge/BridgeTransactionMonitor";
 import { useBridgeTransactions } from "@/hooks/useBridgeTransactions";
 import type { AddTransactionParams } from "@/hooks/useBridgeTransactions";
@@ -79,6 +80,9 @@ export default function BridgePage() {
                 <BridgeForm onSubmit={handleBridgeSubmit} />
               </CardContent>
             </Card>
+
+            {/* Live asset prices */}
+            <AssetPriceTracker />
 
             {/* Info card */}
             <Card>
