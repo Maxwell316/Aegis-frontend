@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#0b1120"/>
+  <g transform="translate(256 256) scale(0.6) translate(-256 -256)">
+    <path d="M256 72 L408 132 V244 C408 336 344 410 256 440 C168 410 104 336 104 244 V132 Z"
+          fill="none" stroke="#2563eb" stroke-width="24" stroke-linejoin="round"/>
+    <path d="M256 148 L326 178 V246 C326 296 296 334 256 352 C216 334 186 296 186 246 V178 Z"
+          fill="#2563eb"/>
+    <text x="256" y="266" font-family="Arial, Helvetica, sans-serif" font-size="120" font-weight="700"
+          fill="#0b1120" text-anchor="middle" dominant-baseline="middle">X</text>
+  </g>
+</svg>
