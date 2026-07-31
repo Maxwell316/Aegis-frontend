@@ -16,7 +16,7 @@ export default function middleware(request: any) {
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
-    connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://api.coingecko.com;
+    connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://api.coingecko.com https://open.er-api.com;
   `;
 
   const contentSecurityPolicyHeaderValue = cspHeader
@@ -42,5 +42,5 @@ export default function middleware(request: any) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|manifest.json|sw.js|workbox-.*|icons/).*)']
 };
