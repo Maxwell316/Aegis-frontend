@@ -1,7 +1,7 @@
 # X-Aegis Frontend & Dashboard 🛡️📊
 
 <p align="center">
-  <img src="./logo.jpeg" alt="X-Aegis Logo" width="200" />
+  <img src="./logo.png" alt="X-Aegis Logo" width="200" />
 </p>
 
 ```text
