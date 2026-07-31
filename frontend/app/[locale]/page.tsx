@@ -167,10 +167,14 @@ export default function Home() {
       {/* Navigation / Header */}
       <header className="border-b border-border bg-card/30 backdrop-blur-md sticky top-0 z-30">
         <div className="container mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 shrink-0">
+          <button 
+            type="button"
+            onClick={() => setActiveTab("dashboard")}
+            className={`flex items-center gap-2 shrink-0 rounded-lg transition-transform hover:opacity-80 ${focusVisibleClass}`}
+          >
             <Image src="/logo.png" alt="X-Aegis Logo" width={40} height={40} className="shrink-0 rounded-lg" />
-            <span className="text-lg sm:text-xl font-bold tracking-tight">X-Aegis</span>
-          </div>
+            <span className="hidden sm:inline text-lg sm:text-xl font-bold tracking-tight">X-Aegis</span>
+          </button>
           <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground items-center" aria-label="Main navigation">
             <button
               type="button"
@@ -198,7 +202,7 @@ export default function Home() {
           </nav>
           
           <div className="flex items-center gap-2 sm:gap-4">
-            <CurrencySwitch />
+            <div className="hidden sm:block"><CurrencySwitch /></div>
             <NotificationCenter />
             <ThemeToggle />
             
