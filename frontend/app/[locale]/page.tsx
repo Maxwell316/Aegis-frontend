@@ -245,7 +245,6 @@ export default function Home() {
                  <div className="hidden sm:flex gap-2">
                    <button
                      type="button"
-                     aria-pressed={activeTab === "deposit"}
                      onClick={() => setActiveTab("deposit")}
                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} bg-primary text-primary-foreground hover:bg-primary/90`}
                    >
@@ -253,7 +252,6 @@ export default function Home() {
                    </button>
                    <button
                      type="button"
-                     aria-pressed={activeTab === "withdraw"}
                      onClick={() => setActiveTab("withdraw")}
                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} bg-muted text-muted-foreground hover:bg-muted/80`}
                    >
