@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { AiInsightStream } from "../../components/AiInsightStream";
 import { VaultOverviewCard } from "../../components/VaultOverviewCard";
 import dynamic from 'next/dynamic';
+import Image from "next/image";
 import Link from "next/link";
 import { TrendingUp, Shield, BarChart3, ArrowUpRight, Menu, X, Gift, HelpCircle, ChevronDown, Settings } from "lucide-react";
 
@@ -39,6 +40,7 @@ import { PartnerDashboard } from "../../components/PartnerDashboard";
 import { CurrencySwitch } from "../../components/CurrencySwitch";
 import { NetworkSwitch } from "../../components/NetworkSwitch";
 import { NotificationCenter } from "../../components/NotificationCenter";
+import { ThemeToggle } from "../../components/ThemeToggle";
 import { useCurrency } from "../../contexts/CurrencyContext";
 
 const MOCK_RISK_DATA = [
@@ -158,11 +160,9 @@ export default function Home() {
 
       {/* Navigation / Header */}
       <header className="border-b border-border bg-card/30 backdrop-blur-md sticky top-0 z-30">
-        <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
-              <Shield className="text-primary-foreground w-5 h-5" />
-            </div>
+            <Image src="/logo.png" alt="X-Aegis Logo" width={40} height={40} className="shrink-0 rounded-lg" />
             <span className="text-lg sm:text-xl font-bold tracking-tight">X-Aegis</span>
           </div>
           <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground items-center" aria-label="Main navigation">
@@ -192,6 +192,7 @@ export default function Home() {
           </nav>
           
           <div className="flex items-center gap-2 sm:gap-4">
+            <ThemeToggle />
             <CurrencySwitch />
             <div className="hidden sm:block">
               <NetworkSwitch />
