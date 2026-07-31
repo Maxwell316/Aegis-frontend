@@ -187,7 +187,7 @@ export function DepositTab() {
                 error={overlayError}
                 onClose={() => setOverlayOpen(false)}
             />
-            <div className="w-full max-w-md mx-auto my-8 p-6 bg-card border rounded-lg shadow-sm">
+            <div className="w-full mx-auto p-4 sm:p-6 bg-transparent">
                 <h2 id="deposit-form-title" className="text-2xl font-semibold mb-4 text-card-foreground">
                     Deposit Funds
                 </h2>

@@ -44,6 +44,7 @@ import { ThemeToggle } from "../../components/ThemeToggle";
 import { useCurrency } from "../../contexts/CurrencyContext";
 import { useFreighter } from "../../contexts/FreighterContext";
 import { useNetwork } from "@/contexts/NetworkContext";
+import { AIChatbot } from "../../components/AIChatbot";
 
 const MOCK_RISK_DATA = [
   { date: "Mar 01", risk: 24 },
@@ -58,6 +59,7 @@ const MOCK_RISK_DATA = [
 export default function Home() {
   const t = useTranslations('HomePage');
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [transactionModal, setTransactionModal] = useState<"deposit" | "withdraw" | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { formatAmount } = useCurrency();
   const { address, isConnected, connect, disconnect } = useFreighter();
@@ -146,17 +148,15 @@ export default function Home() {
             )}
             <button
               type="button"
-              aria-pressed={activeTab === "deposit"}
-              onClick={() => setActiveTab("deposit")}
-              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} ${activeTab === "deposit" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
+              onClick={() => setTransactionModal("deposit")}
+              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} ${transactionModal === "deposit" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
             >
               {t('deposit')}
             </button>
             <button
               type="button"
-              aria-pressed={activeTab === "withdraw"}
-              onClick={() => setActiveTab("withdraw")}
-              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} ${activeTab === "withdraw" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
+              onClick={() => setTransactionModal("withdraw")}
+              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} ${transactionModal === "withdraw" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
             >
               {t('withdraw')}
             </button>
@@ -271,14 +271,14 @@ export default function Home() {
                  <div className="hidden sm:flex gap-2">
                    <button
                      type="button"
-                     onClick={() => setActiveTab("deposit")}
+                     onClick={() => setTransactionModal("deposit")}
                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} bg-primary text-primary-foreground hover:bg-primary/90`}
                    >
                      {t('deposit')}
                    </button>
                    <button
                      type="button"
-                     onClick={() => setActiveTab("withdraw")}
+                     onClick={() => setTransactionModal("withdraw")}
                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} bg-muted text-muted-foreground hover:bg-muted/80`}
                    >
                      {t('withdraw')}
@@ -428,12 +428,42 @@ export default function Home() {
           </div>
         ) : activeTab === "partners" ? (
           <PartnerDashboard />
-        ) : activeTab === "withdraw" ? (
-          <WithdrawTab />
-        ) : (
-          <DepositTab />
-        )}
+        ) : null}
       </div>
+
+      {transactionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/40 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-card w-full max-w-md border border-border rounded-2xl shadow-xl flex flex-col overflow-hidden relative animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
+              <div className="flex bg-muted p-1 rounded-lg">
+                <button
+                  onClick={() => setTransactionModal("deposit")}
+                  className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-all ${transactionModal === 'deposit' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  Deposit
+                </button>
+                <button
+                  onClick={() => setTransactionModal("withdraw")}
+                  className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-all ${transactionModal === 'withdraw' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  Withdraw
+                </button>
+              </div>
+              <button
+                onClick={() => setTransactionModal(null)}
+                className="p-2 text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-0 max-h-[80vh] overflow-y-auto">
+              {transactionModal === "deposit" ? <DepositTab /> : <WithdrawTab />}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <AIChatbot />
     </main>
   );
 }

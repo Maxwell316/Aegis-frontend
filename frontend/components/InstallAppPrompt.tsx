@@ -1,6 +1,7 @@
 "use client";
 
 import { Download, X } from "lucide-react";
+import Image from "next/image";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { Button } from "@/components/ui/button";
 
@@ -21,8 +22,8 @@ export function InstallAppPrompt() {
       className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-4 sm:justify-end sm:pb-6 sm:pr-6"
     >
       <div className="flex w-full max-w-sm items-center gap-3 rounded-xl border border-border bg-background p-4 shadow-lg">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <Download className="h-5 w-5" />
+        <div className="flex shrink-0 items-center justify-center">
+          <Image src="/logo.png" alt="X-Aegis Logo" width={40} height={40} className="rounded-lg" />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium">Install X-Aegis</p>
