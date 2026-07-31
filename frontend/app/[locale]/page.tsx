@@ -196,9 +196,9 @@ export default function Home() {
           </nav>
           
           <div className="flex items-center gap-2 sm:gap-4">
-            <ThemeToggle />
             <CurrencySwitch />
             <NotificationCenter />
+            <ThemeToggle />
             
             <Link href="/settings" className={`hidden sm:flex p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors ${focusVisibleClass}`} aria-label={t('settings')}>
               <Settings className="w-5 h-5" />
