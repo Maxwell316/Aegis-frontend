@@ -9,7 +9,7 @@ import { AiInsightStream } from "../../components/AiInsightStream";
 import { VaultOverviewCard } from "../../components/VaultOverviewCard";
 import dynamic from 'next/dynamic';
 import Link from "next/link";
-import { TrendingUp, Shield, BarChart3, ArrowUpRight, Menu, X, Gift, HelpCircle } from "lucide-react";
+import { TrendingUp, Shield, BarChart3, ArrowUpRight, Menu, X, Gift, HelpCircle, ChevronDown, Settings } from "lucide-react";
 
 const VaultAPYChart = dynamic(() => import('../../components/charts/VaultAPYChart').then(mod => mod.VaultAPYChart), {
   ssr: false,
@@ -165,7 +165,7 @@ export default function Home() {
             </div>
             <span className="text-lg sm:text-xl font-bold tracking-tight">X-Aegis</span>
           </div>
-          <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground" aria-label="Main navigation">
+          <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground items-center" aria-label="Main navigation">
             <button
               type="button"
               aria-pressed={activeTab === "dashboard"}
@@ -174,53 +174,38 @@ export default function Home() {
             >
               {t('dashboard')}
             </button>
-            <button
-              type="button"
-              aria-pressed={activeTab === "referrals"}
-              onClick={() => setActiveTab("referrals")}
-              className={`${activeTab === "referrals" ? "text-foreground" : "hover:text-foreground"} transition-colors rounded-sm ${focusVisibleClass}`}
-             >
-              {t('referrals')}
-            </button>
-            <button
-              type="button"
-              aria-pressed={activeTab === "partners"}
-              onClick={() => setActiveTab("partners")}
-              className={`${activeTab === "partners" ? "text-foreground" : "hover:text-foreground"} transition-colors rounded-sm ${focusVisibleClass}`}
-            >
-              {t('partners')}
-            </button>
             <button type="button" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('vaults')}</button>
             <button type="button" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('swap')}</button>
             <Link href="/bridge" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('bridge')}</Link>
-            <Link href="/simulate" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('simulate')}</Link>
-            <Link href="/settings" className={`hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>{t('settings')}</Link>
+            
+            {/* More Dropdown */}
+            <div className="relative group py-4 -my-4">
+              <button type="button" className={`flex items-center gap-1 hover:text-foreground transition-colors rounded-sm ${focusVisibleClass}`}>
+                {t('more')} <ChevronDown className="w-4 h-4" />
+              </button>
+              <div className="absolute top-full left-0 mt-0 w-48 bg-card border border-border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 flex flex-col overflow-hidden py-1">
+                <button type="button" onClick={() => setActiveTab("referrals")} className="px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors">{t('referrals')}</button>
+                <button type="button" onClick={() => setActiveTab("partners")} className="px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors">{t('partners')}</button>
+                <Link href="/simulate" className="px-4 py-2.5 text-left text-sm hover:bg-muted transition-colors">{t('simulate')}</Link>
+              </div>
+            </div>
           </nav>
+          
           <div className="flex items-center gap-2 sm:gap-4">
             <CurrencySwitch />
             <div className="hidden sm:block">
               <NetworkSwitch />
             </div>
             <NotificationCenter />
-            <button
-              type="button"
-              aria-pressed={activeTab === "deposit"}
-              onClick={() => setActiveTab("deposit")}
-              className={`hidden sm:inline-flex px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${focusVisibleClass} ${activeTab === "deposit" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
-            >
-              {t('deposit')}
-            </button>
-            <button
-              type="button"
-              aria-pressed={activeTab === "withdraw"}
-              onClick={() => setActiveTab("withdraw")}
-              className={`hidden sm:inline-flex px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${focusVisibleClass} ${activeTab === "withdraw" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
-            >
-              {t('withdraw')}
-            </button>
+            
+            <Link href="/settings" className={`hidden sm:flex p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors ${focusVisibleClass}`} aria-label={t('settings')}>
+              <Settings className="w-5 h-5" />
+            </Link>
+
             <button type="button" className={`bg-primary text-primary-foreground px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap ${focusVisibleClass}`}>
               {t('connectWallet')}
             </button>
+            
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
@@ -247,7 +232,7 @@ export default function Home() {
                   {t('volatilityShield')}
                 </p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-3 items-center">
                  <div className="bg-card border border-border px-4 py-2 rounded-xl flex items-center gap-4">
                     <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center">
                       <BarChart3 className="text-green-500 w-5 h-5" />
@@ -256,6 +241,24 @@ export default function Home() {
                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Total Portfolio</p>
                        <p className="text-lg font-bold">{formatAmount(12_450.80)}</p>
                     </div>
+                 </div>
+                 <div className="hidden sm:flex gap-2">
+                   <button
+                     type="button"
+                     aria-pressed={activeTab === "deposit"}
+                     onClick={() => setActiveTab("deposit")}
+                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} bg-primary text-primary-foreground hover:bg-primary/90`}
+                   >
+                     {t('deposit')}
+                   </button>
+                   <button
+                     type="button"
+                     aria-pressed={activeTab === "withdraw"}
+                     onClick={() => setActiveTab("withdraw")}
+                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${focusVisibleClass} bg-muted text-muted-foreground hover:bg-muted/80`}
+                   >
+                     {t('withdraw')}
+                   </button>
                  </div>
               </div>
             </div>
