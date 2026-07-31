@@ -10,7 +10,7 @@ import { VaultOverviewCard } from "../../components/VaultOverviewCard";
 import dynamic from 'next/dynamic';
 import Image from "next/image";
 import Link from "next/link";
-import { TrendingUp, Shield, BarChart3, ArrowUpRight, Menu, X, Gift, HelpCircle, ChevronDown, Settings } from "lucide-react";
+import { TrendingUp, Shield, BarChart3, ArrowUpRight, Menu, X, Gift, HelpCircle, ChevronDown, Settings, LogOut, Globe } from "lucide-react";
 
 const VaultAPYChart = dynamic(() => import('../../components/charts/VaultAPYChart').then(mod => mod.VaultAPYChart), {
   ssr: false,
@@ -43,6 +43,7 @@ import { NotificationCenter } from "../../components/NotificationCenter";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import { useCurrency } from "../../contexts/CurrencyContext";
 import { useFreighter } from "../../contexts/FreighterContext";
+import { useNetwork } from "@/contexts/NetworkContext";
 
 const MOCK_RISK_DATA = [
   { date: "Mar 01", risk: 24 },
@@ -60,6 +61,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { formatAmount } = useCurrency();
   const { address, isConnected, connect, disconnect } = useFreighter();
+  const { network } = useNetwork();
 
   const focusVisibleClass =
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -206,17 +208,21 @@ export default function Home() {
 
             {isConnected ? (
               <div className="relative group py-2">
-                <button type="button" className={`bg-muted border border-border px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:bg-muted/80 transition-all whitespace-nowrap ${focusVisibleClass}`}>
+                <button type="button" className={`flex items-center gap-1.5 bg-muted border border-border px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:bg-muted/80 transition-all whitespace-nowrap ${focusVisibleClass}`}>
+                  <div className={`w-2 h-2 rounded-full ${network === 'mainnet' ? 'bg-success' : 'bg-warning'}`} />
                   {address?.slice(0, 4)}...{address?.slice(-4)}
+                  <ChevronDown className="w-3.5 h-3.5 text-muted-foreground ml-0.5" />
                 </button>
                 <div className="absolute top-full right-0 mt-0 w-72 bg-card border border-border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 flex flex-col p-4">
-                  <p className="text-xs font-bold uppercase text-muted-foreground mb-3 tracking-wider">Network</p>
+                  <p className="text-xs font-bold uppercase text-muted-foreground mb-3 tracking-wider flex items-center gap-1.5">
+                    <Globe className="w-3.5 h-3.5" /> Network
+                  </p>
                   <div className="w-full flex">
                     <NetworkSwitch />
                   </div>
                   <div className="h-px bg-border my-4" />
-                  <button type="button" onClick={disconnect} className="text-left text-sm text-red-500 font-bold hover:text-red-400 transition-colors">
-                    Disconnect Wallet
+                  <button type="button" onClick={disconnect} className="flex items-center gap-2 text-left text-sm text-red-500 font-bold hover:text-red-400 transition-colors">
+                    <LogOut className="w-4 h-4" /> Disconnect Wallet
                   </button>
                 </div>
               </div>

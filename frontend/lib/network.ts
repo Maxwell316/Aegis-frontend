@@ -1,6 +1,6 @@
 import { SorobanRpc } from "@stellar/stellar-sdk";
 
-export type NetworkName = "futurenet" | "testnet" | "mainnet";
+export type NetworkName = "testnet" | "mainnet";
 
 export interface NetworkConfig {
     network: NetworkName;
@@ -9,11 +9,6 @@ export interface NetworkConfig {
 }
 
 export const NETWORKS: Record<NetworkName, NetworkConfig> = {
-    futurenet: {
-        network: "futurenet",
-        rpcUrl: "https://rpc-futurenet.stellar.org",
-        networkPassphrase: "Test SDF Future Network ; October 2022",
-    },
     testnet: {
         network: "testnet",
         rpcUrl: "https://soroban-testnet.stellar.org",

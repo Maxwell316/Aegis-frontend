@@ -7,7 +7,6 @@ import { Wifi } from "lucide-react";
 const NETWORK_OPTIONS: { value: NetworkName; label: string }[] = [
   { value: "mainnet", label: "Mainnet" },
   { value: "testnet", label: "Testnet" },
-  { value: "futurenet", label: "Futurenet" },
 ];
 
 export function NetworkSwitch() {

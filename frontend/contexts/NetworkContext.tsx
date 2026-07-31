@@ -28,10 +28,9 @@ export function NetworkProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (
       stored === "testnet" ||
-      stored === "mainnet" ||
-      stored === "futurenet"
+      stored === "mainnet"
     )
-      return stored;
+      return stored as NetworkName;
     return "testnet";
   });
 
