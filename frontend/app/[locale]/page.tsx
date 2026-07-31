@@ -42,6 +42,7 @@ import { NetworkSwitch } from "../../components/NetworkSwitch";
 import { NotificationCenter } from "../../components/NotificationCenter";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import { useCurrency } from "../../contexts/CurrencyContext";
+import { useFreighter } from "../../contexts/FreighterContext";
 
 const MOCK_RISK_DATA = [
   { date: "Mar 01", risk: 24 },
@@ -58,6 +59,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { formatAmount } = useCurrency();
+  const { address, isConnected, connect, disconnect } = useFreighter();
 
   const focusVisibleClass =
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -135,9 +137,11 @@ export default function Home() {
             <div className="flex justify-center pb-1">
               <CurrencySwitch />
             </div>
-            <div className="flex justify-center pb-2">
-              <NetworkSwitch />
-            </div>
+            {isConnected && (
+              <div className="flex justify-center pb-2">
+                <NetworkSwitch />
+              </div>
+            )}
             <button
               type="button"
               aria-pressed={activeTab === "deposit"}
@@ -194,18 +198,33 @@ export default function Home() {
           <div className="flex items-center gap-2 sm:gap-4">
             <ThemeToggle />
             <CurrencySwitch />
-            <div className="hidden sm:block">
-              <NetworkSwitch />
-            </div>
             <NotificationCenter />
             
             <Link href="/settings" className={`hidden sm:flex p-2 hover:bg-muted rounded-lg text-muted-foreground hover:text-foreground transition-colors ${focusVisibleClass}`} aria-label={t('settings')}>
               <Settings className="w-5 h-5" />
             </Link>
 
-            <button type="button" className={`bg-primary text-primary-foreground px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap ${focusVisibleClass}`}>
-              {t('connectWallet')}
-            </button>
+            {isConnected ? (
+              <div className="relative group py-2">
+                <button type="button" className={`bg-muted border border-border px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:bg-muted/80 transition-all whitespace-nowrap ${focusVisibleClass}`}>
+                  {address?.slice(0, 4)}...{address?.slice(-4)}
+                </button>
+                <div className="absolute top-full right-0 mt-0 w-72 bg-card border border-border rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 flex flex-col p-4">
+                  <p className="text-xs font-bold uppercase text-muted-foreground mb-3 tracking-wider">Network</p>
+                  <div className="w-full flex">
+                    <NetworkSwitch />
+                  </div>
+                  <div className="h-px bg-border my-4" />
+                  <button type="button" onClick={disconnect} className="text-left text-sm text-red-500 font-bold hover:text-red-400 transition-colors">
+                    Disconnect Wallet
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button type="button" onClick={connect} className={`bg-primary text-primary-foreground px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap ${focusVisibleClass}`}>
+                {t('connectWallet')}
+              </button>
+            )}
             
             <button
               type="button"
