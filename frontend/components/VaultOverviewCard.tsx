@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { getProvider } from "../lib/network";
-import { Contract, TransactionBuilder, Account, xdr, SorobanRpc } from "@stellar/stellar-sdk";
+import { Contract, TransactionBuilder, Account, xdr, SorobanRpc, scValToNative, Address } from "@stellar/stellar-sdk";
 import { isConnected, requestAccess } from "@stellar/freighter-api";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useContractAddress } from "@/hooks/useContractAddress";
@@ -101,20 +101,47 @@ export function VaultOverviewCard() {
 
     const fetchVaultData = async (userAddr: string) => {
         try {
-            // MOCK DATA for demonstration (since there is no live contract to query right now)
-            // Adding a small random variation to simulate real-time updates when events trigger a refetch
-            const variation = Math.floor(Math.random() * 1000);
-            setTotalAssets(1500000 + variation);
-            setTotalShares(1200000 + Math.floor(variation * 0.8));
+            const server = getProvider(network);
+            const contract = new Contract(contractId);
+            const source = new Account("GCXKG6RN4ONIEPCMNFB732A436Z5PNDSREXYDPBBN23O65DF4CIE7V3C", "0"); // Dummy account for simulation
+            const networkPassphrase = networkConfig.networkPassphrase;
+
+            const simulateRead = async (method: string, args: xdr.ScVal[] = []) => {
+                const op = contract.call(method, ...args);
+                const tx = new TransactionBuilder(source, { fee: "100", networkPassphrase })
+                    .addOperation(op)
+                    .setTimeout(30)
+                    .build();
+                
+                const sim = await server.simulateTransaction(tx);
+                if (SorobanRpc.Api.isSimulationError(sim)) {
+                    throw new Error(sim.error);
+                }
+                if (SorobanRpc.Api.isSimulationSuccess(sim) && sim.result) {
+                    return scValToNative(sim.result.retval);
+                }
+                return 0;
+            };
+
+            const assetsSc = await simulateRead("total_assets");
+            const sharesSc = await simulateRead("total_shares");
+            
+            setTotalAssets(Number(assetsSc));
+            setTotalShares(Number(sharesSc));
 
             if (userAddr) {
-                setUserBalance(5000 + Math.floor(variation * 0.05));
+                const balSc = await simulateRead("balance", [new Address(userAddr).toScVal()]);
+                setUserBalance(Number(balSc));
             } else {
                 setUserBalance(0);
             }
 
         } catch (e: any) {
-            console.error("Error fetching vault data:", e);
+            console.error("Error fetching vault data from contract:", e);
+            // Graceful fallback to 0 instead of mock data
+            setTotalAssets(0);
+            setTotalShares(0);
+            setUserBalance(0);
             setError("Error connecting to network/contract.");
         }
     };
