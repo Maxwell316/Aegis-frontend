@@ -32,49 +32,57 @@ export function VaultOverviewCard() {
         async function init() {
             setIsLoading(true);
             try {
-                const connected = await isConnected();
                 let currentAddress = "";
-                if (connected) {
-                    const addr = await requestAccess();
-                    if (addr && typeof addr === "string") {
-                        currentAddress = addr;
-                        setAddress(addr);
+                try {
+                    const connected = await isConnected();
+                    if (connected) {
+                        const addr = await requestAccess();
+                        if (addr && typeof addr === "string") {
+                            currentAddress = addr;
+                            setAddress(addr);
+                        }
                     }
+                } catch (walletErr) {
+                    console.warn("Wallet not detected or locked:", walletErr);
                 }
                 if (!isMounted) return;
                 await fetchVaultData(currentAddress);
 
                 // Setup Soroban events polling
-                const latestLedgerResponse = await server.getLatestLedger();
-                if (!isMounted) return;
-                let lastLedger = latestLedgerResponse.sequence;
-
-                pollInterval = setInterval(async () => {
+                try {
+                    const latestLedgerResponse = await server.getLatestLedger();
                     if (!isMounted) return;
-                    try {
-                        const eventsResponse = await server.getEvents({
-                            startLedger: lastLedger,
-                            filters: [
-                                {
-                                    type: "contract",
-                                    contractIds: [contractId]
-                                }
-                            ],
-                            limit: 100
-                        });
+                    let lastLedger = latestLedgerResponse.sequence;
 
-                        if (eventsResponse.events && eventsResponse.events.length > 0) {
-                            console.log("New vault events received:", eventsResponse.events);
-                            // On new events (Deposit, Withdraw, Rebalance), refetch vault data
-                            fetchVaultData(addressRef.current);
+                    pollInterval = setInterval(async () => {
+                        if (!isMounted) return;
+                        try {
+                            const eventsResponse = await server.getEvents({
+                                startLedger: lastLedger,
+                                filters: [
+                                    {
+                                        type: "contract",
+                                        contractIds: [contractId]
+                                    }
+                                ],
+                                limit: 100
+                            });
+
+                            if (eventsResponse.events && eventsResponse.events.length > 0) {
+                                console.log("New vault events received:", eventsResponse.events);
+                                // On new events (Deposit, Withdraw, Rebalance), refetch vault data
+                                fetchVaultData(addressRef.current);
+                            }
+
+                            const newLedgerInfo = await server.getLatestLedger();
+                            lastLedger = newLedgerInfo.sequence;
+                        } catch (pollErr) {
+                            console.error("Error polling for events:", pollErr);
                         }
-
-                        const newLedgerInfo = await server.getLatestLedger();
-                        lastLedger = newLedgerInfo.sequence;
-                    } catch (pollErr) {
-                        console.error("Error polling for events:", pollErr);
-                    }
-                }, 5000); // Poll every 5 seconds
+                    }, 5000); // Poll every 5 seconds
+                } catch (rpcErr) {
+                    console.warn("Failed to initialize RPC polling. The testnet RPC might be rate limited.", rpcErr);
+                }
 
             } catch (err: any) {
                 console.error("Initialization error:", err);
