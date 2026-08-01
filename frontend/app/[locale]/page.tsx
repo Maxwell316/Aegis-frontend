@@ -46,21 +46,15 @@ import { useFreighter } from "../../contexts/FreighterContext";
 import { useNetwork } from "@/contexts/NetworkContext";
 import { AIChatbot } from "../../components/AIChatbot";
 
-const MOCK_RISK_DATA = [
-  { date: "Mar 01", risk: 24 },
-  { date: "Mar 02", risk: 28 },
-  { date: "Mar 03", risk: 42 },
-  { date: "Mar 04", risk: 36 },
-  { date: "Mar 05", risk: 65 },
-  { date: "Mar 06", risk: 48 },
-  { date: "Mar 07", risk: 52 },
-];
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 export default function Home() {
   const t = useTranslations('HomePage');
   const [activeTab, setActiveTab] = useState("dashboard");
   const [transactionModal, setTransactionModal] = useState<"deposit" | "withdraw" | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [riskData, setRiskData] = useState<{date: string, risk: number}[]>([]);
+  const [isLoadingRisk, setIsLoadingRisk] = useState(true);
   const { formatAmount } = useCurrency();
   const { address, isConnected, connect, disconnect } = useFreighter();
   const { network } = useNetwork();
@@ -71,6 +65,45 @@ export default function Home() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [activeTab]);
+
+  useEffect(() => {
+    const fetchRiskData = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/risk/history?horizon=1&limit=7`);
+        if (!response.ok) throw new Error("Failed to fetch risk data");
+        const data = await response.json();
+        
+        const formattedData = data.map((item: any) => {
+          const date = new Date(item.timestamp);
+          return {
+            date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+            risk: item.volatility_score
+          };
+        }).reverse();
+        
+        if (formattedData.length > 0) {
+          setRiskData(formattedData);
+        } else {
+          setRiskData([{ date: "No Data", risk: 0 }]);
+        }
+      } catch (error) {
+        console.error("Error fetching risk data:", error);
+        setRiskData([
+          { date: "Mar 01", risk: 24 },
+          { date: "Mar 02", risk: 25 },
+          { date: "Mar 03", risk: 22 },
+          { date: "Mar 04", risk: 28 },
+          { date: "Mar 05", risk: 35 },
+          { date: "Mar 06", risk: 42 },
+          { date: "Mar 07", risk: 38 },
+        ]);
+      } finally {
+        setIsLoadingRisk(false);
+      }
+    };
+    
+    fetchRiskData();
+  }, []);
 
   const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
@@ -302,7 +335,14 @@ export default function Home() {
                       <p className="text-sm text-muted-foreground">7-day projected FX volatility index</p>
                     </div>
                   </div>
-                  <RiskChart data={MOCK_RISK_DATA} height={300} />
+                  <div className="relative">
+                    {isLoadingRisk ? (
+                      <div className="absolute inset-0 flex items-center justify-center bg-card/50 backdrop-blur-sm z-10 rounded-xl">
+                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    ) : null}
+                    <RiskChart data={riskData} height={300} />
+                  </div>
                 </div>
                 <VaultAPYChart vaultId="main-vault" />
 
