@@ -17,6 +17,10 @@
 
 > **A Stablecoin Volatility Shield for Weak Currencies.**
 
+## 🚀 Deployment Status
+- **Frontend DApp:** Deployed on Vercel
+- **Network:** Connected to Stellar Testnet (Soroban)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built on Stellar](https://img.shields.io/badge/Built%20on-Stellar%20Soroban-purple)](https://soroban.stellar.org)
 
