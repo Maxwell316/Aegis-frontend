@@ -47,7 +47,7 @@ export default function DemoPage() {
               Demonstrates connect/disconnect flow with loading and error states
             </p>
             <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-              import {'{ BasicConnectionButton }'} from '@/examples';
+              import {'{ BasicConnectionButton }'} from &apos;@/examples&apos;;
             </code>
           </div>
           <div className="border-t pt-4">
@@ -65,7 +65,7 @@ export default function DemoPage() {
               Minimal examples for checking wallet status
             </p>
             <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-              import {'{ SimpleInstallationCheck, SimpleConnectionCheck }'} from '@/examples';
+              import {'{ SimpleInstallationCheck, SimpleConnectionCheck }'} from &apos;@/examples&apos;;
             </code>
           </div>
           <div className="border-t pt-4 space-y-4">
@@ -90,7 +90,7 @@ export default function DemoPage() {
               Progressive content reveal based on installation and connection status
             </p>
             <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-              import {'{ ProtectedFeature }'} from '@/examples';
+              import {'{ ProtectedFeature }'} from &apos;@/examples&apos;;
             </code>
           </div>
           <div className="border-t pt-4">
@@ -108,7 +108,7 @@ export default function DemoPage() {
               Demonstrates using wallet address in API calls with useEffect
             </p>
             <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-              import {'{ UserBalanceDisplay }'} from '@/examples';
+              import {'{ UserBalanceDisplay }'} from &apos;@/examples&apos;;
             </code>
           </div>
           <div className="border-t pt-4">
@@ -116,7 +116,7 @@ export default function DemoPage() {
           </div>
           <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
             <strong>Note:</strong> This example will show an error because the API endpoint 
-            doesn't exist. Replace <code className="bg-yellow-100 px-1">/api/balance/{'${address}'}</code> with 
+            doesn&apos;t exist. Replace <code className="bg-yellow-100 px-1">/api/balance/{'${address}'}</code> with 
             your actual endpoint.
           </div>
         </section>
@@ -131,7 +131,7 @@ export default function DemoPage() {
               Another example of address-dependent data fetching
             </p>
             <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-              import {'{ TransactionHistory }'} from '@/examples';
+              import {'{ TransactionHistory }'} from &apos;@/examples&apos;;
             </code>
           </div>
           <div className="border-t pt-4">
@@ -139,7 +139,7 @@ export default function DemoPage() {
           </div>
           <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
             <strong>Note:</strong> This example will show an error because the API endpoint 
-            doesn't exist. Replace <code className="bg-yellow-100 px-1">/api/transactions/{'${address}'}</code> with 
+            doesn&apos;t exist. Replace <code className="bg-yellow-100 px-1">/api/transactions/{'${address}'}</code> with 
             your actual endpoint.
           </div>
         </section>
