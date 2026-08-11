@@ -42,3 +42,7 @@ export function formatCompactNumber(n: number): string {
     }
     return `${sign}${abs}`;
 }
+
+export function formatPercent(value: number): string {
+    return `${value.toFixed(1)}%`;
+}
