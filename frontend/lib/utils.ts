@@ -26,3 +26,19 @@ export function truncateAddress(
     if (address.length <= startChars + endChars + 3) return address;
     return `${address.slice(0, startChars)}...${address.slice(-endChars)}`;
 }
+
+export function formatCompactNumber(n: number): string {
+    if (!Number.isFinite(n)) return "0";
+    if (n === 0) return "0";
+    const abs = Math.abs(n);
+    const sign = n < 0 ? "-" : "";
+    if (abs >= 1_000_000) {
+        const value = Math.round((abs / 1_000_000) * 10) / 10;
+        return `${sign}${value}M`;
+    }
+    if (abs >= 1_000) {
+        const value = Math.round((abs / 1_000) * 10) / 10;
+        return `${sign}${value}K`;
+    }
+    return `${sign}${abs}`;
+}
