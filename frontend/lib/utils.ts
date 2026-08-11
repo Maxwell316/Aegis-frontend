@@ -16,3 +16,13 @@ export function formatRelativeTime(iso: string): string {
     if (diffDays < 7) return `${diffDays}d ago`;
     return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
+
+export function truncateAddress(
+    address: string,
+    startChars: number = 6,
+    endChars: number = 4
+): string {
+    if (!address) return "";
+    if (address.length <= startChars + endChars + 3) return address;
+    return `${address.slice(0, startChars)}...${address.slice(-endChars)}`;
+}
