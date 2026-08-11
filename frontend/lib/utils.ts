@@ -44,5 +44,9 @@ export function formatCompactNumber(n: number): string {
 }
 
 export function formatPercent(value: number): string {
-    return `${value.toFixed(1)}%`;
+    if (!Number.isFinite(value)) return "0%";
+    if (value === 0) return "0%";
+    const rounded = Math.round(value * 100 * 10) / 10;
+    const compact = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+    return `${compact}%`;
 }

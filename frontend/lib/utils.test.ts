@@ -50,8 +50,14 @@ describe("formatCompactNumber", () => {
 });
 
 describe("formatPercent", () => {
-    it("formats a percentage value", () => {
-        expect(formatPercent(0.05)).toBe("0.1%");
-        expect(formatPercent(1)).toBe("1.0%");
+    it("formats ratios as compact percentages", () => {
+        expect(formatPercent(0.1234)).toBe("12.3%");
+        expect(formatPercent(0.05)).toBe("5%");
+        expect(formatPercent(1)).toBe("100%");
+        expect(formatPercent(0)).toBe("0%");
+    });
+
+    it("handles negative values", () => {
+        expect(formatPercent(-0.02)).toBe("-2%");
     });
 });
