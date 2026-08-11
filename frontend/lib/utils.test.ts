@@ -1,4 +1,4 @@
-import { formatCompactNumber, truncateAddress } from "./utils";
+import { formatCompactNumber, formatPercent, truncateAddress } from "./utils";
 
 describe("truncateAddress", () => {
     it("shortens a full Stellar address, keeping start and end chars", () => {
@@ -46,5 +46,18 @@ describe("formatCompactNumber", () => {
     it("handles negative values", () => {
         expect(formatCompactNumber(-2_500_000)).toBe("-2.5M");
         expect(formatCompactNumber(-1_500)).toBe("-1.5K");
+    });
+});
+
+describe("formatPercent", () => {
+    it("formats ratios as compact percentages", () => {
+        expect(formatPercent(0.1234)).toBe("12.3%");
+        expect(formatPercent(0.05)).toBe("5%");
+        expect(formatPercent(1)).toBe("100%");
+        expect(formatPercent(0)).toBe("0%");
+    });
+
+    it("handles negative values", () => {
+        expect(formatPercent(-0.02)).toBe("-2%");
     });
 });
