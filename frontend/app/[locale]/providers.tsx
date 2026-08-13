@@ -10,11 +10,11 @@ import { NetworkProvider } from "@/contexts/NetworkContext";
 import { VaultProvider } from "@/contexts/VaultContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 
-export function Providers({ children }: { children: ReactNode }) {
+export function Providers({ children, nonce }: { children: ReactNode; nonce?: string }) {
   return (
     <NetworkProvider>
       <FreighterProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
           <CurrencyProvider>
             <VaultProvider>
               <SessionProvider>

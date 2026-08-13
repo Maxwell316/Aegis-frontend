@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 import { Providers } from "./providers";
 import { NextIntlClientProvider } from 'next-intl';
@@ -77,12 +78,13 @@ export default async function RootLayout({
   }
 
   const messages = await getMessages();
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Providers>
+          <Providers nonce={nonce}>
             <OfflineBanner />
             <ErrorBoundary>
               {children}
