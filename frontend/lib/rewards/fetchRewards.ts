@@ -1,6 +1,6 @@
 import type { RewardEntry, RewardSummaryData } from "@/types/rewards";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const MOCK_ENTRIES: RewardEntry[] = [
   { id: "1", source: "USDC Savings Vault", amount: "18.42", asset: "USDC", status: "pending", dateISO: "2024-03-10T00:00:00.000Z" },
@@ -11,9 +11,14 @@ const MOCK_ENTRIES: RewardEntry[] = [
 ];
 
 function summarize(entries: RewardEntry[]): RewardSummaryData {
-  const totals = entries.reduce(
+  const normalized = entries.map((entry) => ({
+    ...entry,
+    amount: (Number.parseFloat(entry.amount) || 0).toFixed(2),
+  }));
+
+  const totals = normalized.reduce(
     (acc, entry) => {
-      const value = Number.parseFloat(entry.amount) || 0;
+      const value = Number.parseFloat(entry.amount);
       if (entry.status === "pending") {
         acc.totalPending += value;
       } else {
@@ -24,7 +29,7 @@ function summarize(entries: RewardEntry[]): RewardSummaryData {
     { totalPending: 0, totalClaimed: 0 },
   );
 
-  return { ...totals, entries };
+  return { ...totals, entries: normalized };
 }
 
 /**
@@ -34,14 +39,16 @@ function summarize(entries: RewardEntry[]): RewardSummaryData {
  * to local mock data otherwise or on failure.
  */
 export async function fetchRewardSummary(signal?: AbortSignal): Promise<RewardSummaryData> {
-  try {
-    const res = await fetch(`${BACKEND_URL}/rewards/summary`, { signal });
-    if (res.ok) {
-      const json = (await res.json()) as { entries: RewardEntry[] };
-      return summarize(json.entries);
+  if (BACKEND_URL) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/rewards/summary`, { signal });
+      if (res.ok) {
+        const json = (await res.json()) as { entries: RewardEntry[] };
+        return summarize(json.entries);
+      }
+    } catch {
+      // Fall through to local mock
     }
-  } catch {
-    // Fall through to local mock
   }
 
   return summarize(MOCK_ENTRIES);

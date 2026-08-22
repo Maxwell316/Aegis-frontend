@@ -100,7 +100,7 @@ export function RewardSummary() {
                     </div>
                     <div className="text-right shrink-0">
                       <p className="text-sm font-bold">
-                        {Number.parseFloat(entry.amount).toFixed(2)} {entry.asset}
+                        {entry.amount} {entry.asset}
                       </p>
                       <p
                         className={`text-[10px] uppercase font-bold ${
